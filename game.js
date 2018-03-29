@@ -4,7 +4,7 @@ let canvasContext;
 let ballX = 50;
 let ballY = 50;
 let ballSpeedX = 10;
-let ballSpeedY = 6;
+let ballSpeedY = 5;
 
 let paddle1Y = 250;
 let paddle2Y = 250;
@@ -54,9 +54,9 @@ function ballReset() {
 function computerMovement() {
   let paddle2YCenter = paddle2Y + (PADDLE_HEIGHT / 2);
   if (paddle2YCenter < ballY - 35) {
-    paddle2Y += 9;
+    paddle2Y += 10;
   } else if (paddle2YCenter > ballY + 35) {
-    paddle2Y -= 9;
+    paddle2Y -= 10;
   }
 }
 
@@ -70,6 +70,8 @@ function moveEverything() {
     console.log("Test")
     if (ballY > paddle1Y && ballY < paddle1Y + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
+      let deltaY = ballY - (paddle1Y + PADDLE_HEIGHT / 2);
+      ballSpeedY = deltaY * 0.30;
     } else if (ballX < 0) {
       player2Score++;
       ballReset();
@@ -78,6 +80,8 @@ function moveEverything() {
   if (ballX > canvas.width - 40) {
     if (ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
+      let deltaY = ballY - (paddle2Y + PADDLE_HEIGHT / 2);
+      ballSpeedY = deltaY * 0.30;
     } else if (ballX > canvas.width) {
       player1Score++;
       ballReset();
