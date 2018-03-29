@@ -4,7 +4,7 @@ let canvasContext;
 let ballX = 50;
 let ballY = 50;
 let ballSpeedX = 10;
-let ballSpeedY = 8;
+let ballSpeedY = 6;
 
 let paddle1Y = 250;
 let paddle2Y = 250;
@@ -54,9 +54,9 @@ function ballReset() {
 function computerMovement() {
   let paddle2YCenter = paddle2Y + (PADDLE_HEIGHT / 2);
   if (paddle2YCenter < ballY - 35) {
-    paddle2Y += 8;
+    paddle2Y += 9;
   } else if (paddle2YCenter > ballY + 35) {
-    paddle2Y -= 8;
+    paddle2Y -= 9;
   }
 }
 
@@ -66,21 +66,21 @@ function moveEverything() {
   ballX += ballSpeedX;
   ballY += ballSpeedY;
 
-  if (ballX < PADDLE_WIDTH + 30) {
+  if (ballX < 0) {
     console.log("Test")
     if (ballY > paddle1Y && ballY < paddle1Y + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
     } else {
-      ballReset();
       player2Score++;
+      ballReset();
     }
   }
-  if (ballX > canvas.width  - 40) {
+  if (ballX > canvas.width) {
     if (ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
     } else {
-      ballReset();
       player1Score++;
+      ballReset();
     }
   }
   if (ballY < 10) {
@@ -102,7 +102,9 @@ function drawEverything() {
   // Ball
   colorCircle(ballX, ballY, 10, 'white');
   // Scoreboard
-  canvasContext.fillText(player1Score + '|' + player2Score, 400, 100);
+  canvasContext.font = '48px sans-serif'
+  canvasContext.fillText(player1Score, 200, 80);
+  canvasContext.fillText(player2Score, 580, 80);
 }
 
 function colorCircle(centerX, centerY, radius, drawColor) {
