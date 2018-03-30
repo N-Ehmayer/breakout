@@ -18,6 +18,23 @@ const WINNING_SCORE = 3;
 
 let showingWinScreen = true;
 
+const hitSound = new Audio('assets/square_beep.wav');
+const missSound = new Audio('assets/square_miss.wav');
+const winSound = new Audio('assets/square_win.wav');
+const loseSound = new Audio('assets/square_lose.wav');
+
+
+function playSoundEffect(sound) {
+  if (typeof prevSound === 'undefined') {
+    let prevSound = sound;
+    sound.play();
+  } else {
+    prevSound.pause();
+    prevSound.currentTime = 0;
+    sound.play();
+    prevSound = sound;
+  }
+}
 
 function handleMouseClick(evt) {
   if (showingWinScreen) {
@@ -58,8 +75,14 @@ function calculateMousePos(evt) {
 }
 
 function ballReset() {
-  if (player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE) {
+  if (player1Score >= WINNING_SCORE) {
     showingWinScreen = true;
+    playSoundEffect(winSound);
+  } else if (player2Score >= WINNING_SCORE) {
+    showingWinScreen = true;
+    playSoundEffect(loseSound);
+  } else {
+    playSoundEffect(missSound);
   }
 
   if (ballX < 0 || ballX > canvas.width) {
@@ -70,7 +93,7 @@ function ballReset() {
 }
 
 function computerMovement() {
-  let paddle2YCenter = paddle2Y + (PADDLE_HEIGHT / 2);
+  let paddle2YCenter = paddle2Y + (PADDLE_HEIGHT  / 2);
   if (paddle2YCenter < ballY - 35) {
     paddle2Y += 10;
   } else if (paddle2YCenter > ballY + 35) {
@@ -93,6 +116,7 @@ function moveEverything() {
       ballSpeedX = -ballSpeedX;
       let deltaY = ballY - (paddle1Y + PADDLE_HEIGHT / 2);
       ballSpeedY = deltaY * 0.30;
+      playSoundEffect(hitSound);
     } else if (ballX < 0) {
       player2Score++; // Must be before ballReset()
       ballReset();
@@ -103,6 +127,7 @@ function moveEverything() {
       ballSpeedX = -ballSpeedX;
       let deltaY = ballY - (paddle2Y + PADDLE_HEIGHT / 2);
       ballSpeedY = deltaY * 0.30;
+      playSoundEffect(hitSound);
     } else if (ballX > canvas.width) {
       player1Score++;
       ballReset();
