@@ -10,9 +10,11 @@ let paddle1Y = 250;
 let paddle2Y = 250;
 const PADDLE_HEIGHT = 100;
 const PADDLE_WIDTH = 10;
+const WALL_PADDING = 15;
 
 let player1Score = 0;
 let player2Score = 0;
+const WINNING_SCORE = 3;
 
 
 window.onload = function() {
@@ -28,7 +30,7 @@ window.onload = function() {
 
   canvas.addEventListener('mousemove', function(evt) {
     const mousePos = calculateMousePos(evt);
-    paddle1Y = mousePos.y - 18;
+    paddle1Y = mousePos.y;
   })
 }
 
@@ -44,6 +46,11 @@ function calculateMousePos(evt) {
 }
 
 function ballReset() {
+  if (player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE) {
+    player1Score = 0;
+    player2Score = 0;
+  }
+
   if (ballX < 0 || ballX > canvas.width) {
     ballSpeedX = -ballSpeedX;
     ballX = canvas.width / 2;
@@ -66,18 +73,18 @@ function moveEverything() {
   ballX += ballSpeedX;
   ballY += ballSpeedY;
 
-  if (ballX < PADDLE_WIDTH + 30) {
+  if (ballX < PADDLE_WIDTH + WALL_PADDING + 10) {
     console.log("Test")
     if (ballY > paddle1Y && ballY < paddle1Y + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
       let deltaY = ballY - (paddle1Y + PADDLE_HEIGHT / 2);
       ballSpeedY = deltaY * 0.30;
     } else if (ballX < 0) {
-      player2Score++;
+      player2Score++; // Must be before ballReset()
       ballReset();
     }
   }
-  if (ballX > canvas.width - 40) {
+  if (ballX > canvas.width - (WALL_PADDING + PADDLE_WIDTH + 10)) {
     if (ballY > paddle2Y && ballY < paddle2Y + PADDLE_HEIGHT) {
       ballSpeedX = -ballSpeedX;
       let deltaY = ballY - (paddle2Y + PADDLE_HEIGHT / 2);
@@ -100,9 +107,9 @@ function drawEverything() {
   // Canvas
   colorRect(0, 0, canvas.width, canvas.height, 'black');
   // Left paddle
-  colorRect(20, paddle1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
+  colorRect(WALL_PADDING, paddle1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
   // Right paddle
-  colorRect(canvas.width - PADDLE_WIDTH - 20, paddle2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
+  colorRect(canvas.width - PADDLE_WIDTH - WALL_PADDING, paddle2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
   // Ball
   colorCircle(ballX, ballY, 10, 'white');
   // Scoreboard
