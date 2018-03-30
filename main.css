@@ -1,0 +1,12 @@
+#canvas-container {
+  text-align: center;
+}
+
+#gameCanvas {
+  display: inline;
+}
+
+h1 {
+  border-bottom: 1px solid lightgrey;
+  padding-bottom: 5px;
+}

@@ -10,7 +10,7 @@ let paddle1Y = 250;
 let paddle2Y = 250;
 const PADDLE_HEIGHT = 100;
 const PADDLE_WIDTH = 10;
-const WALL_PADDING = 15;
+const WALL_PADDING = 10;
 
 let player1Score = 0;
 let player2Score = 0;
@@ -145,6 +145,12 @@ function drawEverything() {
     return;
   }
 
+  // Scoreboard
+  canvasContext.font = '45px sans-serif'
+  canvasContext.fillStyle = 'white';
+  canvasContext.fillText(player1Score, 190, 70);
+  canvasContext.fillText(player2Score, 590, 70);
+
   drawNet();
 
   // Left paddle
@@ -154,10 +160,6 @@ function drawEverything() {
   // Ball
   colorCircle(ballX, ballY, 10, 'white');
 
-  // Scoreboard
-  canvasContext.font = '45px sans-serif'
-  canvasContext.fillText(player1Score, 190, 70);
-  canvasContext.fillText(player2Score, 590, 70);
 }
 
 function colorCircle(centerX, centerY, radius, drawColor) {
