@@ -1,3 +1,9 @@
+body {
+  z-index: 1;
+  background-image:
+    url("http://eskipaper.com/images/metal-wallpaper-12.jpg");
+}
+
 #canvas-container {
   text-align: center;
 }
@@ -7,6 +13,13 @@
 }
 
 h1 {
-  border-bottom: 1px solid lightgrey;
-  padding-bottom: 5px;
+  z-index: 6;
+  text-align: center;
+  color: white;
+  color: white;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
 }
