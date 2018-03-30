@@ -14,8 +14,18 @@ const WALL_PADDING = 15;
 
 let player1Score = 0;
 let player2Score = 0;
-const WINNING_SCORE = 3;
+const WINNING_SCORE = 1;
 
+let showingWinScreen = false;
+
+
+function handleMouseClick(evt) {
+  if (showingWinScreen) {
+    player1Score = 0;
+    player2Score = 0;
+    showingWinScreen = false;
+  }
+}
 
 window.onload = function() {
   console.log("Hello World!");
@@ -27,6 +37,8 @@ window.onload = function() {
     moveEverything();
     drawEverything();
   }, 1000/framesPerSecond);
+
+  canvas.addEventListener('mousedown', handleMouseClick)
 
   canvas.addEventListener('mousemove', function(evt) {
     const mousePos = calculateMousePos(evt);
@@ -47,8 +59,7 @@ function calculateMousePos(evt) {
 
 function ballReset() {
   if (player1Score >= WINNING_SCORE || player2Score >= WINNING_SCORE) {
-    player1Score = 0;
-    player2Score = 0;
+    showingWinScreen = true;
   }
 
   if (ballX < 0 || ballX > canvas.width) {
@@ -68,7 +79,10 @@ function computerMovement() {
 }
 
 function moveEverything() {
- computerMovement();
+  if(showingWinScreen) {
+    return;
+  }
+  //computerMovement();
 
   ballX += ballSpeedX;
   ballY += ballSpeedY;
@@ -103,9 +117,23 @@ function moveEverything() {
 }
 
 function drawEverything() {
-
   // Canvas
   colorRect(0, 0, canvas.width, canvas.height, 'black');
+
+  if (showingWinScreen) {
+    canvasContext.font = '80px serif'
+    if (player1Score >= WINNING_SCORE) {
+      canvasContext.fillStyle = 'green';
+      canvasContext.fillText('VICTORY', 225, 250);
+    } else if (player2Score >= WINNING_SCORE) {
+      canvasContext.fillStyle = 'red';
+      canvasContext.fillText('DEFEAT', 256, 250);
+    }
+    canvasContext.font = '45px serif'
+    canvasContext.fillStyle = 'white';
+    canvasContext.fillText('click to continue', 250, 400);
+    return;
+  }
   // Left paddle
   colorRect(WALL_PADDING, paddle1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
   // Right paddle
