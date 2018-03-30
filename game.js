@@ -14,9 +14,9 @@ const WALL_PADDING = 15;
 
 let player1Score = 0;
 let player2Score = 0;
-const WINNING_SCORE = 1;
+const WINNING_SCORE = 3;
 
-let showingWinScreen = false;
+let showingWinScreen = true;
 
 
 function handleMouseClick(evt) {
@@ -82,7 +82,7 @@ function moveEverything() {
   if(showingWinScreen) {
     return;
   }
-  //computerMovement();
+  computerMovement();
 
   ballX += ballSpeedX;
   ballY += ballSpeedY;
@@ -116,10 +116,17 @@ function moveEverything() {
   }
 }
 
+function drawNet() {
+  for (let i = 10; i < canvas.height; i += 40) {
+    colorRect(canvas.width / 2 - 1, i, 2, 20, 'grey');
+  }
+}
+
 function drawEverything() {
   // Canvas
   colorRect(0, 0, canvas.width, canvas.height, 'black');
 
+  // Start screen
   if (showingWinScreen) {
     canvasContext.font = '80px serif'
     if (player1Score >= WINNING_SCORE) {
@@ -128,22 +135,29 @@ function drawEverything() {
     } else if (player2Score >= WINNING_SCORE) {
       canvasContext.fillStyle = 'red';
       canvasContext.fillText('DEFEAT', 256, 250);
+    } else {
+      canvasContext.fillStyle = 'white';
+      canvasContext.fillText('Definitely not Pong', 85, 250);
     }
     canvasContext.font = '45px serif'
     canvasContext.fillStyle = 'white';
     canvasContext.fillText('click to continue', 250, 400);
     return;
   }
+
+  drawNet();
+
   // Left paddle
   colorRect(WALL_PADDING, paddle1Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
   // Right paddle
   colorRect(canvas.width - PADDLE_WIDTH - WALL_PADDING, paddle2Y, PADDLE_WIDTH, PADDLE_HEIGHT, 'white');
   // Ball
   colorCircle(ballX, ballY, 10, 'white');
+
   // Scoreboard
   canvasContext.font = '45px sans-serif'
-  canvasContext.fillText(player1Score, 200, 80);
-  canvasContext.fillText(player2Score, 575, 80);
+  canvasContext.fillText(player1Score, 190, 70);
+  canvasContext.fillText(player2Score, 590, 70);
 }
 
 function colorCircle(centerX, centerY, radius, drawColor) {
