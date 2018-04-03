@@ -111,8 +111,7 @@ function draw() {
   drawLives();
 
   if (ballInPlay && playBall) {
-    ballXSpeed = 3;
-    ballYSpeed = -5;
+    activateBall();
   }
 
   // Left and right wall collision
@@ -127,8 +126,10 @@ function draw() {
 
   // Paddle and ground collision
   if (ballYPos > canvas.height - ballDi - paddleHeight - paddlePadding) {
-    if (ballXPos > paddleX && ballXPos < paddleX + paddleWidth && ballYPos < canvas.height-paddleHeight-paddlePadding) {
+    if (ballXPos+ballDi > paddleX && ballXPos < paddleX + paddleWidth && ballYPos < canvas.height-paddleHeight-paddlePadding) {
       ballYSpeed = -ballYSpeed;
+      let deltaX = (ballXPos+ballDi/2) - (paddleX+paddleWidth/2);
+      ballXSpeed = deltaX * 0.10;
     } else if (ballYPos > canvas.height) {
       ballReset();
     }
@@ -146,6 +147,11 @@ function draw() {
   requestAnimationFrame(draw);
 }
 
+function activateBall() {
+  ballXSpeed = 3;
+  ballYSpeed = -5;
+}
+
 function ballReset() {
   if (lives.length <= 1) {
     alert('GAME OVER');
@@ -157,10 +163,9 @@ function ballReset() {
     }
   } else {
     lives.pop();
-    ballXSpeed = 0;
-    ballYSpeed = 0;
-
   }
+  ballXSpeed = 0;
+  ballYSpeed = 0;
   ballInPlay = false;
 }
 
