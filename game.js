@@ -21,12 +21,11 @@ let paddleX = (canvas.width-paddleWidth)/2;
 let rightPressed = false;
 let leftPressed = false;
 
-const heart = new Image();
-heart.src = './assets/images/heart.png';
-const heartWidth = 30;
-const heartHeight = 28;
-const heartPadding = 10;
-let hearts = [1, 1, 1];
+const life = new Image();
+life.src = './assets/images/ball.png';
+const lifeWidth = 30;
+const lifeHeight = 30;
+let lives = [1, 1, 1];
 
 const brickRowCount = 8;
 const brickColumnCount = 8;
@@ -42,7 +41,6 @@ for (c = 0; c < brickColumnCount; c++) {
     bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
-console.log(bricks);
 
 
 function drawBall() {
@@ -61,6 +59,7 @@ function drawPaddle() {
   ctx.closePath();
 }
 
+
 function drawBricks() {
   for (c = 0; c < brickColumnCount; c++) {
     for (r = 0; r < brickRowCount; r++) {
@@ -71,10 +70,20 @@ function drawBricks() {
         bricks[c][r].y = brickY;
         ctx.beginPath();
         ctx.rect(brickX, brickY, brickWidth, brickHeight);
+
+        const linearGradient = ctx.createLinearGradient(0, 0, 0, 200);
+        linearGradient.addColorStop(0, 'white');
+        linearGradient.addColorStop(1, "#0095DD");
+        const linearGradientDamaged = ctx.createLinearGradient(0, 0, 0, 150);
+        linearGradientDamaged.addColorStop(0, 'white');
+        linearGradientDamaged.addColorStop(1, '#75d1ff');
+
         if (bricks[c][r].status == 1) {
-          ctx.fillStyle = "#0095DD";
+          // ctx.fillStyle = "#0095DD";
+          ctx.fillStyle = linearGradient;
         } else {
-          ctx.fillStyle = "#63ccff";
+          // ctx.fillStyle = "#63ccff";
+          ctx.fillStyle = linearGradientDamaged;
         }
         ctx.fill();
         ctx.closePath();
@@ -83,12 +92,12 @@ function drawBricks() {
   }
 }
 
-function drawHearts() {
-  let heartXOffset = 20;
+function drawLives() {
+  let lifeXOffset = 20;
   ctx.beginPath();
-  for (h = 0; h < hearts.length; h++) {
-    ctx.drawImage(heart, heartXOffset, 18, heartWidth, heartHeight);
-    heartXOffset += 35;
+  for (h = 0; h < lives.length; h++) {
+    ctx.drawImage(life, lifeXOffset, 18, lifeWidth, lifeHeight);
+    lifeXOffset += 35;
   }
   ctx.closePath();
 }
@@ -99,7 +108,12 @@ function draw() {
   drawBall();
   drawPaddle();
   collisionDetection();
-  drawHearts();
+  drawLives();
+
+  if (ballInPlay && playBall) {
+    ballXSpeed = 3;
+    ballYSpeed = -5;
+  }
 
   // Left and right wall collision
   if (ballXPos < 0 || ballXPos + ballDi > canvas.width) {
@@ -123,10 +137,6 @@ function draw() {
   ballXPos += ballXSpeed;
   ballYPos += ballYSpeed;
 
-  if (ballInPlay && playBall) {
-    ballXSpeed = 3;
-    ballYSpeed = -5;
-  }
 
   if (rightPressed && paddleX < canvas.width - paddleWidth) {
     paddleX += 7;
@@ -137,16 +147,16 @@ function draw() {
 }
 
 function ballReset() {
-  if (hearts.length <= 1) {
+  if (lives.length <= 1) {
     alert('GAME OVER');
-    hearts = [1, 1, 1];
+    lives = [1, 1, 1];
     for(c=0; c<brickColumnCount; c++) {
       for(r=0; r<brickRowCount; r++) {
         bricks[c][r].status = 1;
       }
     }
   } else {
-    hearts.pop();
+    lives.pop();
     ballXSpeed = 0;
     ballYSpeed = 0;
 
@@ -156,7 +166,6 @@ function ballReset() {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
-
 
 function keyDownHandler(e) {
   if (e.keyCode == 39) {
