@@ -5,9 +5,11 @@ const ball = new Image();
 ball.src = './assets/images/ball.png';
 const ballDi = 25;
 let ballXPos = canvas.width/2;
-let ballYPos = canvas.height - 60;
-let ballXSpeed = 4;
-let ballYSpeed = -5;
+let ballYPos = canvas.height - 55;
+let ballXSpeed = 0;
+let ballYSpeed = 0;
+let playBall = false;
+let ballInPlay = false;
 
 const paddle = new Image();
 paddle.src = './assets/images/paddle.png';
@@ -44,18 +46,18 @@ console.log(bricks);
 
 
 function drawBall() {
+  if (!ballInPlay) {
+    ballXPos = paddleX+paddleWidth/2 - ballDi/2
+    ballYPos = canvas.height - 55;
+  }
   ctx.beginPath();
-  // ctx.arc(ballXPos, ballYPos, ballRadius, 0, Math.PI*2);
   ctx.drawImage(ball, ballXPos, ballYPos, ballDi, ballDi)
   ctx.closePath();
 }
 
 function drawPaddle() {
   ctx.beginPath();
-  // ctx.rect(paddleX, canvas.height-paddleHeight-paddlePadding, paddleWidth, paddleHeight);
   ctx.drawImage(paddle, paddleX, canvas.height-paddleHeight-paddlePadding, paddleWidth, paddleHeight);
-  // ctx.fillStyle = "#0095DD";
-  // ctx.fill();
   ctx.closePath();
 }
 
@@ -121,6 +123,11 @@ function draw() {
   ballXPos += ballXSpeed;
   ballYPos += ballYSpeed;
 
+  if (ballInPlay && playBall) {
+    ballXSpeed = 3;
+    ballYSpeed = -5;
+  }
+
   if (rightPressed && paddleX < canvas.width - paddleWidth) {
     paddleX += 7;
   } else if (leftPressed && paddleX > 0) {
@@ -140,22 +147,26 @@ function ballReset() {
     }
   } else {
     hearts.pop();
-  }
+    ballXSpeed = 0;
+    ballYSpeed = 0;
 
-  ballXPos = paddleX + paddleWidth/2;
-  ballYPos = canvas.height - 60;
-  ballXSpeed = 2;
-  ballYSpeed = -5;
+  }
+  ballInPlay = false;
 }
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
+
 
 function keyDownHandler(e) {
   if (e.keyCode == 39) {
     rightPressed = true;
   } else if (e.keyCode == 37) {
     leftPressed = true;
+  }
+  if (e.keyCode == 32 && !ballInPlay) {
+    ballInPlay = true;
+    playBall = true;
   }
 }
 
@@ -164,6 +175,9 @@ function keyUpHandler(e) {
     rightPressed = false;
   } else if (e.keyCode == 37) {
     leftPressed = false;
+  }
+  if (e.keyCode = 32) {
+    playBall = false
   }
 }
 
