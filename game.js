@@ -26,21 +26,22 @@ const heartHeight = 28;
 const heartPadding = 10;
 let hearts = [1, 1, 1];
 
-const brickRowCount = 3;
-const brickColumnCount = 5;
+const brickRowCount = 8;
+const brickColumnCount = 8;
 const brickWidth = 75;
 const brickHeight = 20;
 const brickPadding = 10;
-const brickOffsetTop = 30;
-const brickOffsetLeft = 30;
+const brickOffsetTop = 80;
+const brickOffsetLeft = 64;
 const bricks = [];
 for (c = 0; c < brickColumnCount; c++) {
   bricks[c] = [];
   for (r = 0; r < brickRowCount; r++) {
-    bricks[c][r] = { x: 0, y: 0 };
+    bricks[c][r] = { x: 0, y: 0, status: 1 };
   }
 }
 console.log(bricks);
+
 
 function drawBall() {
   ctx.beginPath();
@@ -58,20 +59,40 @@ function drawPaddle() {
   ctx.closePath();
 }
 
+function drawBricks() {
+  for (c = 0; c < brickColumnCount; c++) {
+    for (r = 0; r < brickRowCount; r++) {
+      if (bricks[c][r].status == 1) {
+        let brickX = (c*(brickWidth+brickPadding))+brickOffsetLeft;
+        let brickY = (r*(brickHeight+brickPadding))+brickOffsetTop;
+        bricks[c][r].x = brickX;
+        bricks[c][r].y = brickY;
+        ctx.beginPath();
+        ctx.rect(brickX, brickY, brickWidth, brickHeight);
+        ctx.fillStyle = "#0095DD";
+        ctx.fill();
+        ctx.closePath();
+      }
+    }
+  }
+}
+
 function drawHearts() {
-  let heartXPos = 20;
+  let heartXOffset = 20;
   ctx.beginPath();
   for (h = 0; h < hearts.length; h++) {
-    ctx.drawImage(heart, heartXPos, 20, heartWidth, heartHeight);
-    heartXPos += 35;
+    ctx.drawImage(heart, heartXOffset, 18, heartWidth, heartHeight);
+    heartXOffset += 35;
   }
   ctx.closePath();
 }
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBricks();
   drawBall();
   drawPaddle();
+  collisionDetection();
   drawHearts();
 
   // Left and right wall collision
@@ -133,6 +154,20 @@ function keyUpHandler(e) {
     rightPressed = false;
   } else if (e.keyCode == 37) {
     leftPressed = false;
+  }
+}
+
+function collisionDetection() {
+  for(c=0; c<brickColumnCount; c++) {
+    for(r=0; r<brickRowCount; r++) {
+      var b = bricks[c][r];
+      if (b.status == 1) {
+        if (ballXPos > b.x && ballXPos < b.x+brickWidth && ballYPos > b.y && ballYPos < b.y+brickHeight) {
+          b.status = 0;
+          ballYSpeed = -ballYSpeed;
+        }
+      }
+    }
   }
 }
 
