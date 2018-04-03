@@ -1,25 +1,12 @@
-body {
-  z-index: 1;
-  background-image:
-    url("http://eskipaper.com/images/metal-wallpaper-12.jpg");
+* {
+  padding: 0;
+  margin: 0;
 }
 
-#canvas-container {
-  text-align: center;
+#canvas {
+  background-color: #eee;
+  display: block;
+  margin: 0 auto;
+  margin-top: 30px;
 }
 
-#gameCanvas {
-  display: inline;
-}
-
-h1 {
-  z-index: 6;
-  text-align: center;
-  color: white;
-  color: white;
-  text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
-}
