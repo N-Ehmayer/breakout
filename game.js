@@ -63,7 +63,6 @@ function drawPaddle() {
   ctx.closePath();
 }
 
-
 function drawBricks() {
   for (c = 0; c < brickColumnCount; c++) {
     for (r = 0; r < brickRowCount; r++) {
@@ -143,7 +142,6 @@ function draw() {
 
   ballXPos += ballXSpeed;
   ballYPos += ballYSpeed;
-
 
   if (rightPressed && paddleX < canvas.width - paddleWidth) {
     paddleX += 8;
@@ -252,4 +250,3 @@ function drawScore() {
 }
 
 draw();
-
